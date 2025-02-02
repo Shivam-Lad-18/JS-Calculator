@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <title>Scientific Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="conatiner-fluid w-100 vh-100">
+        <div class="row w-100 h-100">
+            <div class="col-12 col-md-8">
+                <div class="calculator p-3 d-flex flex-column h-100">
+
+                    <!-- Title -->
+                    <h4 class="mb-0">Calculator</h4>
+
+                    <!-- Input area -->
+                    <div class="mb-3 flex-grow-1">
+                        <label for="exampleFormControlTextarea1" class=" fs-6 text-end w-100 fw-lighter">23 + 2</label>
+                        <input class="form-control border-0 px-0 text-end fs-1 text fw-bold " id="Input-area"
+                            placeholder="0" onfocus="keepFocus()"></input>
+                    </div>
+
+                    <!-- Degree and fahrenheit button -->
+                    <div class="scale">
+                        <ul class="nav nav-underline">
+                            <li class="nav-item">
+                                <button type="button" class=" btn btn-light border-0  text-dark"
+                                    onclick="toggleText(this)">DEG</button>
+
+                            </li>
+                            <li class="nav-item">
+                                <div class=" p-0 text-dark nav-link ">
+                                    <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off"
+                                        onchange="toggleActiveClass(this)">
+                                    <label class="btn py-1 " for="btncheck1">F-E</label>
+                                </div>
+                                <!-- <input  class="  text-dark">F-E</input>   -->
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <!-- Memory buttons -->
+                    <div class="memory-btn mb-1">
+                        <button type="button" class=" btn btn-light border-0  text-dark" onclick="">MC</button>
+                        <button type="button" class=" btn btn-light border-0  text-dark" onclick="">MR</button>
+                        <button type="button" class=" btn btn-light border-0  text-dark" onclick="">M+</button>
+                        <button type="button" class=" btn btn-light border-0  text-dark" onclick="">M-</button>
+                        <button type="button" class=" btn btn-light border-0  text-dark" onclick="">MS</button>
+                    </div>
+
+                    <!--border above -->
+                    <div class="keyboard border-top d-flex flex-column ">
+                        <!--Dropdowns-->
+                        <div class="drop-btn d-flex py-2 gap-2 ">
+                            <div class="dropdown h-auto">
+                                <button class="btn btn-light  border-0 dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Trigonometry
+                                </button>
+                                <div class="dropdown-menu bg-body-tertiary px-2" style="width: 300px;">
+                                    <div class="row row-cols-4 pb-2">
+                                        <div class="col col-3 ">
+                                            <button class="btn btn-light px-0 w-100 ">2<sup>nd</sup></button>
+                                        </div>
+                                        <div class="col col-3  ">
+                                            <button class="btn btn-light  px-0 w-100">sin</button>
+                                        </div>
+                                        <div class="col col-3  ">
+                                            <button class="btn btn-light  px-0 w-100">cos</button>
+
+                                        </div>
+                                        <div class="col col-3  ">
+                                            <button class="btn btn-light  px-0 w-100">tan</button>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="row row-cols-4">
+                                        <div class="col col-3 p">
+                                            <button class="btn btn-light px-0 w-100 ">hyp</button>
+                                        </div>
+                                        <div class="col col-3  ">
+                                            <button class="btn btn-light  px-0 w-100">sec</button>
+                                        </div>
+                                        <div class="col col-3  ">
+                                            <button class="btn btn-light  px-0 w-100">csc</button>
+
+                                        </div>
+                                        <div class="col col-3  ">
+                                            <button class="btn btn-light  px-0 w-100">cot</button>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="dropdown h-auto ">
+                                <button class="btn btn-light  border-0 dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Function
+                                </button>
+                                <div class="dropdown-menu bg-body-tertiary px-2" style="width: 250px;">
+                                    <div class="row row-cols-3 pb-2">
+                                        <div class="col col-4 ">
+                                            <button class="btn btn-light px-0 w-100 ">
+                                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                                    <mrow>
+                                                        <mi>|</mi>
+                                                        <mo>x</mo>
+                                                        <mi>|</mi>
+                                                    </mrow>
+                                                </math></button>
+                                        </div>
+                                        <div class="col col-4  ">
+                                            <button class="btn btn-light  px-0 w-100">
+                                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                                    <mrow>
+                                                        <mo>&#x230A;</mo>
+                                                        <mi>x</mi>
+                                                        <mo>&#x230B;</mo>
+                                                    </mrow>
+                                                </math></button>
+                                        </div>
+                                        <div class="col col-4  ">
+                                            <button class="btn btn-light  px-0 w-100">
+                                                <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                                    <mrow>
+                                                        <mo>&#x2308;</mo> <!-- Left ceiling bracket -->
+                                                        <mi>x</mi>
+                                                        <mo>&#x2309;</mo> <!-- Right ceiling bracket -->
+                                                    </mrow>
+                                                </math></button>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="row row-cols-3 ">
+                                        <div class="col col-4 ">
+                                            <button class="btn btn-light px-0 w-100 ">rand</button>
+                                        </div>
+                                        <div class="col col-4  ">
+                                            <button class="btn btn-light  px-0 w-100"><span>&rarr;</span>dms</button>
+                                        </div>
+                                        <div class="col col-4  ">
+                                            <button class="btn btn-light  px-0 w-100"><span>&rarr;</span>deg</button>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- keyboard -->
+                        <div class="row row-cols-5 text-center gy-1 flex-grow-1">
+                            <div class="g-col-1  ">
+                                <button
+                                    class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">2<sup>nd</sup></button>
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">&pi;</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">e</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">C</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0"><img
+                                        src="./images/icons8-backspace-100.png" alt="backspace" height="24px"></button>
+
+                            </div>
+
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                        <mrow>
+                                            <mo>x</mo>
+                                            <sup>2</sup>
+                                        </mrow>
+                                    </math>
+                                </button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0"><sup>1</sup>/<sub><math
+                                            xmlns="http://www.w3.org/1998/Math/MathML">
+                                            <mrow>
+                                                <mo>x</mo>
+                                            </mrow>
+                                        </math></sub></button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0"><math
+                                        xmlns="http://www.w3.org/1998/Math/MathML">
+                                        <mrow>
+                                            <mi>|</mi>
+                                            <mo>x</mo>
+                                            <mi>|</mi>
+
+                                        </mrow>
+                                    </math></button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">exp</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">mod</button>
+
+                            </div>
+
+                            <div class="g-col-1 ">
+                                <button
+                                    class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0"><sup>2</sup><span>&#8730;x</span>
+                                </button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">(</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">)</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">n!</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light  px-0 w-100 shadow-sm h-100 rounded-0">&#247;</button>
+
+                            </div>
+
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-0">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                        <mrow>
+                                            <mo>x</mo>
+                                        </mrow>
+                                    </math>
+                                    <sup>y</sup></button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">7</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">8</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">9</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">&#215;</button>
+
+                            </div>
+
+                            <div class="g-col-1 ">
+                                <button
+                                    class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">10<sup>x</sup></button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">4</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">5</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">6</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button
+                                    class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">&#8722;</button>
+
+                            </div>
+
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">log</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">1</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">2</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">3</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">&#43;</button>
+
+                            </div>
+
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">ln</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button
+                                    class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0"><sup>+</sup>/<sub>&#8722;</sub></button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">0</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">.</button>
+
+                            </div>
+                            <div class="g-col-1 ">
+                                <button class="btn btn-light w-100 px-0 w-100 shadow-sm h-100 rounded-0">=</button>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col col-md-4 d-md-block d-none ">
+                <div class="history">
+                    <ul class="nav nav-underline">
+                        <li class=" nav-item ">
+                            <button class=" nav-link active text-dark py-1" onclick="setActive(this)"
+                                aria-current="page" href="#">History</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link text-dark py-1" onclick="setActive(this)" href="#">Memory</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
