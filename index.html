@@ -67,8 +67,9 @@
                         <!--Dropdowns-->
                         <div class="drop-btn d-flex py-2 gap-2 ">
                             <div class="dropdown h-auto">
-                                <button class="btn btn-light  border-0 dropdown-toggle" type="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                                <!-- <button class="btn btn-light  border-0 dropdown-toggle" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false"> -->
                                     Trigonometry
                                 </button>
                                 <div class="dropdown-menu bg-body-tertiary px-2" style="width: 300px;">
@@ -168,13 +169,11 @@
                         </div>
                         <!-- keyboard -->
                         <div class="row row-cols-5 text-center gy-1 flex-grow-1" id="keys">
-                            <div class="g-col-1 px-1 rounded-2  ">
-                                <buttorounded-2 n
-                                    class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-2">2<sup>nd</sup></buttorounded>
+                            <div class="g-col-1 px-1 rounded-2 ">
+                                <button class="btn btn-light px-0 w-100 shadow-sm h-100 rounded-2" id="chan">2<sup>nd</sup></button>
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
                                 <button class="btn btn-light rounded-2 px-0 w-100 shadow-sm h-100 " id="pi">&pi;</button>
-
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
                                 <button class="btn btn-light rounded-2 px-0 w-100 shadow-sm h-100 " id="e">e</button>
@@ -199,7 +198,14 @@
                                         </mrow>
                                     </math>
                                 </button>
-
+                                <button class="btn btn-light rounded-2 px-0 w-100 shadow-sm h-100 " id="square_inv">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                        <mrow>
+                                            <mo>x</mo>
+                                            <sup>3</sup>
+                                        </mrow>
+                                    </math>
+                                </button>
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
                                 <button class="btn btn-light rounded-2 px-0 w-100 shadow-sm h-100 " id="inverse"><sup>1</sup>/<sub><math
@@ -207,7 +213,9 @@
                                             <mrow>
                                                 <mo>x</mo>
                                             </mrow>
-                                        </math></sub></button>
+                                        </math>
+                                    </sub>
+                                    </button>
 
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
@@ -234,8 +242,10 @@
                             <div class="g-col-1 px-1 rounded-2 ">
                                 <button
                                     class="btn btn-light px-0 rounded-2 w-100 shadow-sm h-100 " id="square_root"><sup>2</sup><span>&#8730;x</span>
-                                </buttorounded>
-
+                                </button>
+                                <button
+                                class="btn btn-light px-0 rounded-2 w-100 shadow-sm h-100 " id="square_root_inv"><sup>3</sup><span>&#8730;x</span>
+                            </button>
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
                                 <button class="btn btn-light rounded-2 px-0 w-100 shadow-sm h-100 ">(</button>
@@ -260,10 +270,19 @@
                                     <math xmlns="http://www.w3.org/1998/Math/MathML">
                                         <mrow>
                                             <mo>x</mo>
+                                            <sup>y</sup>
                                         </mrow>
                                     </math>
-                                    <sup>y</sup></button>
-
+                                </button>
+                                <button class="btn btn-light rounded-2 px-0 w-100 shadow-sm h-100 " id="**_inv">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                        <mrow>
+                                        <sup>y</sup>
+                                            &#8730;
+                                            <sub>x</sub>
+                                        </mrow>
+                                    </math>
+                                </button>
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
                                 <button class="btn btn-light rounded-2 w-100 px-0 w-100 shadow-sm h-100 "
@@ -288,8 +307,9 @@
 
                             <div class="g-col-1 px-1 rounded-2 ">
                                 <button
-                                    class="btn btn-light w-100 rounded-2 px-0 w-100 shadow-sm h-100 " id="tenpow">10<sup>x</sup></buttorounded>
-
+                                    class="btn btn-light w-100 rounded-2 px-0 w-100 shadow-sm h-100 " id="tenpow">10<sup>x</sup></button>
+                                    <button
+                                    class="btn btn-light w-100 rounded-2 px-0 w-100 shadow-sm h-100 " id="tenpow_inv">2<sup>x</sup></button>
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
                                 <button class="btn btn-light rounded-2 w-100 px-0 w-100 shadow-sm h-100 "
@@ -313,6 +333,8 @@
 
                             <div class="g-col-1 px-1 rounded-2 ">
                                 <button class="btn btn-light rounded-2 w-100 px-0 w-100 shadow-sm h-100 " id="log">log</button>
+                                <button class="btn btn-light rounded-2 w-100 px-0 w-100 shadow-sm h-100 " id="log_inv">log<sub>x</sub>y</button>
+
 
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
@@ -338,6 +360,8 @@
 
                             <div class="g-col-1 px-1 rounded-2 ">
                                 <button class="btn btn-light rounded-2 w-100 px-0 w-100 shadow-sm h-100 " id="ln">ln</button>
+                                <button class="btn btn-light rounded-2 w-100 px-0 w-100 shadow-sm h-100 " id="ln_inv">e<sup>x</sup></button>
+
 
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
@@ -356,7 +380,7 @@
 
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
-                                <button class="btn btn-light rounded-2 w-100 px-0 w-100 shadow-sm h-100 "
+                                <button class="btn btn-primary rounded-2 w-100 px-0 w-100 shadow-sm h-100 "
                                     id="=">=</button>
 
                             </div>
