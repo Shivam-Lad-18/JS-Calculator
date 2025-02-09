@@ -1,8 +1,21 @@
 var input_area_g = document.getElementById("Input_area");
 var sub_area_g = document.getElementById("sub_input");
 var keys = document.getElementById("keys");
+var trigo_drop = document.getElementById("trigo_drop");
+var func_drop = document.getElementById("func_drop");
+var trigo_btns = document.querySelectorAll(".t-func");
+
 var chanbool = false;
+var f_exp = false;
+var f_equal=false;
+var f_logxy = false;
+var f_t2nd = false;
+var f_hyp = false;
+
 keys.addEventListener('click', buttonpress);
+trigo_drop.addEventListener('click', trigoDrop);
+func_drop.addEventListener('click', funcDrop);
+
 
 const operators = new Set(["+", "-", "/", "*", "%", "**"]);
 function setActive(clickedButton) {
@@ -18,7 +31,9 @@ function toggleActiveClass(checkbox) {
         navLink.classList.remove('active');
     }
 }
-
+function logB(number,base){
+    return Math.log(number) / Math.log(base);
+}
 function toggleText(button) {
     const currentText = button.innerText;
 
@@ -71,6 +86,8 @@ window.onload = function () {
     var tenpow_inv = document.getElementById("tenpow_inv");
     var log_inv = document.getElementById("log_inv");
     var ln_inv = document.getElementById("ln_inv");
+    var f_T2nd = false;
+    var f_hyp = false;
 
     square_inv.style.display = "none";
     square_root_inv.style.display = "none";
@@ -118,8 +135,6 @@ function changeBtn() {
         chanbool = true;
         chanbtn.classList.add('btn-primary');
         chanbtn.classList.remove('btn-light');
-
-
     } else {
         square_inv.style.display = "none";
         square_root_inv.style.display = "none";
@@ -162,27 +177,28 @@ function buttonpress(e) {
             sub_area_g.value = "0" + val;
             return;
         }
-        else if(input_area_g.value === ""){
-            sub_area_g.value=sub_area_g.value.slice(0,sub_area_g.value.length-1)+val;
+        else if (input_area_g.value === "") {
+            sub_area_g.value = sub_area_g.value.slice(0, sub_area_g.value.length - 1) + val;
             return;
         }
-        if(Number(input_area_g.value)<0){
-            var opp = sub_area_g.value.at(sub_area_g.value.length-1);
+        if (Number(input_area_g.value) < 0) {
+            var opp = sub_area_g.value.at(sub_area_g.value.length - 1);
             // console.log(opp);
-            
-            if(opp == "+"){
-            sub_area_g.value = sub_area_g.value.slice(0,sub_area_g.value.length-1) +
-                                '-' + Math.abs(input_area_g.value);
+
+            if (opp == "+") {
+                sub_area_g.value = sub_area_g.value.slice(0, sub_area_g.value.length - 1) +
+                    '-' + Math.abs(input_area_g.value) + val;
             }
-            else if(opp=='-'){
-                sub_area_g.value = sub_area_g.value.slice(0,sub_area_g.value.length-1) +
-                '+' + Math.abs(input_area_g.value);
-            }else{
+            else if (opp == '-') {
+                sub_area_g.value = sub_area_g.value.slice(0, sub_area_g.value.length - 1) +
+                    '+' + Math.abs(input_area_g.value) + val;
+            } else {
                 sub_area_g.value += input_area_g.value + val;
             }
-        }else{
+        } else {
             sub_area_g.value += input_area_g.value + val;
         }
+        f_equal=true;
         // input_area_g.value='';
     }
     else if (val === 'pi') {
@@ -192,9 +208,9 @@ function buttonpress(e) {
         input_area_g.value = Math.E;
     }
     else if (val === "clear") {
-        if(input_area_g.value!=''){
+        if (input_area_g.value != '') {
             input_area_g.value = '';
-        }else{
+        } else {
             sub_area_g.value = '';
         }
     }
@@ -207,20 +223,26 @@ function buttonpress(e) {
         }
     }
     else if (val === "=") {
-        if(Number(input_area_g.value)<0){
-            var opp = sub_area_g.value.at(sub_area_g.value.length-1);
+        var exp;
+        if (Number(input_area_g.value) < 0) {
+            var opp = sub_area_g.value.at(sub_area_g.value.length - 1);
             // console.log(opp);
-            if(opp=="+"){
-                var exp = sub_area_g.value.slice(0,sub_area_g.value.length-1) +
-                '-' + Math.abs(input_area_g.value);
-            }else if(opp=='-'){
-                var exp = sub_area_g.value.slice(0,sub_area_g.value.length-1) +
-                '+' + Math.abs(input_area_g.value);
+            if (opp == "+") {
+                exp = sub_area_g.value.slice(0, sub_area_g.value.length - 1) +
+                    '-' + Math.abs(input_area_g.value);
+            } else if (opp == '-') {
+                exp = sub_area_g.value.slice(0, sub_area_g.value.length - 1) +
+                    '+' + Math.abs(input_area_g.value);
             }
-        }else{
-            var exp = sub_area_g.value + input_area_g.value;
+            else {
+                exp = sub_area_g.value + input_area_g.value;
+            }
+        } else {
+            // console.log(Number(sub_area_g.value));
+            exp = sub_area_g.value + input_area_g.value;
         }
-        
+        // console.log(exp);
+
         if (input_area_g.value === '') {
             input_area_g.value = eval(exp.substr(0, exp.length - 1));
             sub_area_g.value = '';
@@ -229,6 +251,7 @@ function buttonpress(e) {
             input_area_g.value = eval(exp);
             sub_area_g.value = '';
         }
+        f_equal=true;
     }
     else if (e.target.closest("#abs")) {
         // console.log("fj");
@@ -285,6 +308,9 @@ function buttonpress(e) {
             ShowError();
         }
     }
+    else if (e.target.closest("#log_inv")) {
+        
+    }
     else if (e.target.closest("#ln")) {
         if (input_area_g.value != '') {
             input_area_g.value = Math.log(Number(input_area_g.value));
@@ -296,8 +322,12 @@ function buttonpress(e) {
         if (input_area_g.value != '') {
             input_area_g.value = Math.exp(Number(input_area_g.value));
         } else {
-            ShowError();
+            input_area_g.value = 1;
         }
+    }
+    else if (e.target.closest("#exp")) {
+        input_area_g.value+='.e+0';
+        f_exp=true;
     }
     else if (val === ".") {
         if (input_area_g.value.at(input_area_g.value.length - 1) == '.') {
@@ -314,6 +344,66 @@ function buttonpress(e) {
         if (input_area_g.value === "0") {
             input_area_g.value = "";
         }
-        input_area_g.value += val; // Append number to input field
+        if(f_exp){
+            input_area_g.value=input_area_g.value.slice(0,input_area_g.value.length-1)+val;
+            f_exp=false;
+        }
+        else if(f_equal){
+            input_area_g.value=val;
+            f_equal=false;
+        }
+        else{
+            input_area_g.value += val; // Append number to input field
+        }
     }
+}
+
+function trigoDrop(e){
+    var btn2nd = document.getElementById("trig2nd");
+    var btnhyp = document.getElementById("hyp");
+
+    let btn_id = e.target.id.trim();
+    if (e.target.closest("#trig2nd")) {
+        if(!f_t2nd){
+            btn2nd.classList.add('btn-primary');
+            btn2nd.classList.remove('btn-light');
+            f_t2nd = true;
+            trigo_btns.forEach(button =>{
+                button.innerHTML=button.innerHTML+`<sup>-1</sup>`;
+                button.id = 'a'+button.id;
+            })
+        }
+        else{
+            btn2nd.classList.remove('btn-primary');
+            btn2nd.classList.add('btn-light');
+            f_t2nd = false;
+            trigo_btns.forEach(button =>{
+                button.innerHTML = button.innerHTML.replace(/<sup>-1<\/sup>/g, "");
+                button.id = button.id.slice(1);
+            })
+        }
+    }else if(e.target.closest("#hyp")){
+        if(!f_hyp){
+            btnhyp.classList.add('btn-primary');
+            btnhyp.classList.remove('btn-light');
+            f_hyp = true;
+            trigo_btns.forEach(button =>{
+                button.innerHTML = button.innerHTML.slice(0, 3) + 'h' + button.innerHTML.slice(3);
+                button.id = button.id+'h';
+            });
+        }
+        else{
+            btnhyp.classList.remove('btn-primary');
+            btnhyp.classList.add('btn-light');
+            f_hyp = false;
+            trigo_btns.forEach(button =>{
+                button.innerHTML = button.innerHTML.slice(0, 3) + button.innerHTML.slice(4);
+                button.id = button.id.slice(0,button.id.length-1);
+
+            });
+        }
+    }
+}
+function funcDrop(e){
+    
 }

@@ -37,7 +37,7 @@
     font-weight: bold;
   }
   .col .btn{
-    --bs-btn-bg: #ffffff;
+    /* --bs-btn-bg: #ffffff; */
     width: auto;
   }
   .sticky-alert {

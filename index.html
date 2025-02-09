@@ -65,8 +65,8 @@
                     <!--border above -->
                     <div class="keyboard border-top d-flex flex-column ">
                         <!--Dropdowns-->
-                        <div class="drop-btn d-flex py-2 gap-2 ">
-                            <div class="dropdown h-auto">
+                        <div class="drop-btn d-flex py-2 gap-2" >
+                            <div class="dropdown h-auto" id="trigo_drop">
                                 <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                                 <!-- <button class="btn btn-light  border-0 dropdown-toggle" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false"> -->
@@ -75,34 +75,34 @@
                                 <div class="dropdown-menu bg-body-tertiary px-2" style="width: 300px;">
                                     <div class="row row-cols-4 pb-2">
                                         <div class="col col-3 ">
-                                            <button class="btn btn-light px-0 w-100 ">2<sup>nd</sup></button>
+                                            <button class="btn btn-light px-0 w-100 " id="trig2nd">2<sup>nd</sup></button>
                                         </div>
                                         <div class="col col-3  ">
-                                            <button class="btn btn-light  px-0 w-100">sin</button>
+                                            <button class="btn btn-light  t-func px-0 w-100" id="sin">sin</button>
                                         </div>
                                         <div class="col col-3  ">
-                                            <button class="btn btn-light  px-0 w-100">cos</button>
+                                            <button class="btn btn-light  t-func px-0 w-100" id="cos">cos</button>
 
                                         </div>
                                         <div class="col col-3  ">
-                                            <button class="btn btn-light  px-0 w-100">tan</button>
+                                            <button class="btn btn-light  t-func px-0 w-100" id="tan">tan</button>
 
                                         </div>
 
                                     </div>
                                     <div class="row row-cols-4">
                                         <div class="col col-3 p">
-                                            <button class="btn btn-light px-0 w-100 ">hyp</button>
+                                            <button class="btn btn-light px-0 w-100" id="hyp">hyp</button>
                                         </div>
                                         <div class="col col-3  ">
-                                            <button class="btn btn-light  px-0 w-100">sec</button>
+                                            <button class="btn btn-light  t-func px-0 w-100" id="sec">sec</button>
                                         </div>
                                         <div class="col col-3  ">
-                                            <button class="btn btn-light  px-0 w-100">csc</button>
+                                            <button class="btn btn-light t-func  px-0 w-100" id="csc">csc</button>
 
                                         </div>
                                         <div class="col col-3  ">
-                                            <button class="btn btn-light  px-0 w-100">cot</button>
+                                            <button class="btn btn-light  t-func px-0 w-100" id="cot">cot</button>
 
                                         </div>
 
@@ -110,7 +110,7 @@
                                 </div>
                             </div>
 
-                            <div class="dropdown h-auto ">
+                            <div class="dropdown h-auto " id="func_drop">
                                 <button class="btn btn-light  border-0 dropdown-toggle" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     Function
@@ -231,7 +231,7 @@
 
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
-                                <button class="btn btn-light rounded-2 px-0 w-100 shadow-sm h-100 ">exp</button>
+                                <button class="btn btn-light rounded-2 px-0 w-100 shadow-sm h-100 " id="exp">exp</button>
 
                             </div>
                             <div class="g-col-1 px-1 rounded-2 ">
