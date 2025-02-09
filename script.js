@@ -11,13 +11,143 @@ var f_equal=false;
 var f_logxy = false;
 var f_t2nd = false;
 var f_hyp = false;
+var scale = 'degree';
 
 keys.addEventListener('click', buttonpress);
 trigo_drop.addEventListener('click', trigoDrop);
 func_drop.addEventListener('click', funcDrop);
 
+class TrigoFunctions {
+    // Method to convert degrees to radians
+    static toRadians(degrees) {
+        return degrees * (Math.PI / 180);
+    }
+
+    // Method to convert gradians to radians
+    static toRadiansFromGrad(grad) {
+        return grad * (Math.PI / 200);
+    }
+
+    // Method to convert radians to degrees
+    static toDegrees(radians) {
+        return radians * (180 / Math.PI);
+    }
+
+    // Method to convert radians to gradians
+    static toGrad(radians) {
+        return radians * (200 / Math.PI);
+    }
+
+    // Method to normalize angle based on scale
+    static normalizeAngle(angle, scale) {
+        switch (scale) {
+            case 'degree':
+                return this.toRadians(angle);
+            case 'grad':
+                return this.toRadiansFromGrad(angle);
+            case 'rad':
+            default:
+                return angle;
+        }
+    }
+
+    // Sine function
+    static sin(angle, scale = 'rad') {
+        const rad = this.normalizeAngle(angle, scale);
+        return Math.sin(rad);
+    }
+
+    // Arc Sine function
+    static asin(value, scale = 'rad') {
+        const result = Math.asin(value);
+        return scale === 'degree' ? this.toDegrees(result) : scale === 'grad' ? this.toGrad(result) : result;
+    }
+
+    // Hyperbolic Sine function
+    static sinh(angle, scale = 'rad') {
+        const rad = this.normalizeAngle(angle, scale);
+        return Math.sinh(rad);
+    }
+
+    // Inverse Hyperbolic Sine function
+    static asinh(value) {
+        return Math.asinh(value);
+    }
+
+    // Cosine function
+    static cos(angle, scale = 'rad') {
+        const rad = this.normalizeAngle(angle, scale);
+        return Math.cos(rad);
+    }
+
+    // Arc Cosine function
+    static acos(value, scale = 'rad') {
+        const result = Math.acos(value);
+        return scale === 'degree' ? this.toDegrees(result) : scale === 'grad' ? this.toGrad(result) : result;
+    }
+
+    // Hyperbolic Cosine function
+    static cosh(angle, scale = 'rad') {
+        const rad = this.normalizeAngle(angle, scale);
+        return Math.cosh(rad);
+    }
+
+    // Inverse Hyperbolic Cosine function
+    static acosh(value) {
+        return Math.acosh(value);
+    }
+
+    // Tangent function
+    static tan(angle, scale = 'rad') {
+        const rad = this.normalizeAngle(angle, scale);
+        return Math.tan(rad);
+    }
+
+    // Arc Tangent function
+    static atan(value, scale = 'rad') {
+        const result = Math.atan(value);
+        return scale === 'degree' ? this.toDegrees(result) : scale === 'grad' ? this.toGrad(result) : result;
+    }
+
+    // Hyperbolic Tangent function
+    static tanh(angle, scale = 'rad') {
+        const rad = this.normalizeAngle(angle, scale);
+        return Math.tanh(rad);
+    }
+
+    // Inverse Hyperbolic Tangent function
+    static atanh(value) {
+        return Math.atanh(value);
+    }
+
+    // Secant function
+    static sec(angle, scale = 'rad') {
+        const rad = this.normalizeAngle(angle, scale);
+        return 1 / Math.cos(rad);
+    }
+
+    // Cosecant function
+    static csc(angle, scale = 'rad') {
+        const rad = this.normalizeAngle(angle, scale);
+        return 1 / Math.sin(rad);
+    }
+
+    // Cotangent function
+    static cot(angle, scale = 'rad') {
+        const rad = this.normalizeAngle(angle, scale);
+        return 1 / Math.tan(rad);
+    }
+}
 
 const operators = new Set(["+", "-", "/", "*", "%", "**"]);
+
+const trigoFunctionsSet = new Set([
+    'sin', 'cos', 'tan', 'sec', 'csc', 'cot', // Basic trigonometric functions
+    'asin', 'acos', 'atan', 'asec', 'acsc', 'acot', // Inverse trigonometric functions
+    'sinh', 'cosh', 'tanh', 'sech', 'csch', 'coth', // Hyperbolic functions
+    'asinh', 'acosh', 'atanh', 'asech', 'acsch', 'acoth' // Inverse hyperbolic functions
+]);
+
 function setActive(clickedButton) {
     // Remove 'active' class from all buttons
     document.querySelectorAll(".nav-link").forEach(button => button.classList.remove("active"));
@@ -39,11 +169,16 @@ function toggleText(button) {
 
     if (currentText === "DEG") {
         button.innerText = "GRAD";  // Change to Grad
+        scale = "grad";
     } else if (currentText === "GRAD") {
         button.innerText = "RAD";  // Change to Rad
+        scale = "rad";
     } else {
-        button.innerText = "DEG";  // Change back to Degree
+        button.innerText = "DEG"; // Change back to Degree
+        scale = "degree";  
     }
+    console.log(scale);
+    
 }
 
 function keepFocus() {
@@ -402,8 +537,46 @@ function trigoDrop(e){
 
             });
         }
+    }else if(trigoFunctionsSet.has(e.target.id)){
+        // console.log(e.target.id);
+        const functionName = e.target.id;
+        const inputValue = Number(input_area_g.value);
+        if (!isNaN(inputValue)) { // Check if the input is a valid number
+            // Call the corresponding function from TrigoFunctions
+            const ans = TrigoFunctions[functionName](inputValue, scale);
+            // Handle special cases like Infinity
+            if (!isFinite(ans)) {
+                ShowError();
+                return;
+            }
+            // Display the result
+            input_area_g.value = ans;
+            f_equal = true;
+        } else {
+            ShowError(); // Show error if input is not a number
+        }
     }
 }
 function funcDrop(e){
-    
+    if(e.target.closest("#modulo")){
+        if (input_area_g.value < 0) {
+            input_area_g.value *= -1;
+        }
+    }else if(e.target.closest("#floor")){
+        if(!isNaN(Number(input_area_g.value))){
+            input_area_g.value=Math.floor(Number(input_area_g.value));
+        }else{
+            ShowError();
+        }
+    }
+    else if(e.target.closest("#ceil")){
+        if(!isNaN(Number(input_area_g.value))){
+            input_area_g.value=Math.ceil(Number(input_area_g.value));
+        }else{
+            ShowError();
+        }
+    }
+    else if(e.target.closest("#rand")){
+        input_area_g.value=Math.random();
+    }
 }
