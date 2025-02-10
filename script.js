@@ -20,12 +20,12 @@ var f_hyp = false;
 var f_logxy = false;
 var scale = 'degree';
 var sp_count = 0;
-var current_memory = 0;
+// var current_memory = 0;
 
 keys.addEventListener('click', buttonpress);
 trigo_drop.addEventListener('click', trigoDrop);
 func_drop.addEventListener('click', funcDrop);
-memory_btns.addEventListener('click',memoryBtn);
+memory_btns.addEventListener('click', memoryBtn);
 
 class TrigoFunctions {
     // Method to convert degrees to radians
@@ -148,30 +148,32 @@ class TrigoFunctions {
         return 1 / Math.tan(rad);
     }
 }
-function memoryBtn(e){
-    if(e.target.closest("#memory_mc")){
+function memoryBtn(e) {
+    let firstChild = document.querySelector("#memory_div div:first-child h3");
+
+    if (e.target.closest("#memory_mc")) {
         localStorage.clear();
-        current_memory=0;
+        // current_memory=0;
         getMemory();
-    }else if(e.target.closest("#memory_mr")){
-        input_area_g.value=current_memory;
-    }else if(e.target.closest("#memory_ma")){
-        console.log(typeof Number(input_area_g.value));
-        current_memory=Number(current_memory)+Number(input_area_g.value);
+    } else if (e.target.closest("#memory_mr")) {
+        input_area_g.value = firstChild.innerText;
+    } else if (e.target.closest("#memory_ma")) {
+        console.log(Number(firstChild.innerText) + Number(input_area_g.value));
+        firstChild.innerHTML = Number(firstChild.innerText) + Number(input_area_g.value);
+        localStorage.setItem(firstChild.id, firstChild.innerHTML);
         getMemory();
-    }else if(e.target.closest("#memory_mre")){
-        current_memory=Number(current_memory)-Number(input_area_g.value);
+    } else if (e.target.closest("#memory_mre")) {
+        firstChild.innerHTML = Number(firstChild.innerText) - Number(input_area_g.value);
+        localStorage.setItem(firstChild.id, firstChild.innerHTML);
         getMemory();
-    }else if(e.target.closest("#memory_ms")){
-        if(!isNaN(input_area_g.value)){
-            if(current_memory!=0){
-                localStorage.setItem(Date.now(),current_memory);
-            }
-            current_memory=input_area_g.value;
+    } else if (e.target.closest("#memory_ms")) {
+        if (!isNaN(input_area_g.value) && input_area_g.value != '') {
+            localStorage.setItem(Date.now(), input_area_g.value);
+            firstChild.innerText = input_area_g.value;
         }
         getMemory();
     }
-    console.log(current_memory);
+    // console.log(current_memory);
 }
 const operators = new Set(["+", "-", "/", "*", "%", "**"]);
 
@@ -181,13 +183,13 @@ const trigoFunctionsSet = new Set([
     'sinh', 'cosh', 'tanh', 'sech', 'csch', 'coth', // Hyperbolic functions
     'asinh', 'acosh', 'atanh', 'asech', 'acsch', 'acoth' // Inverse hyperbolic functions
 ]);
-function setActive(clickedButton,button) {
-    if(button=='history'){
-        history_div.style.display='block';
-        memory_div.style.display='none';
-    }else{
-        history_div.style.display='none';
-        memory_div.style.display='block';
+function setActive(clickedButton, button) {
+    if (button == 'history') {
+        history_div.style.display = 'block';
+        memory_div.style.display = 'none';
+    } else {
+        history_div.style.display = 'none';
+        memory_div.style.display = 'block';
     }
     // Remove 'active' class from all buttons
     document.querySelectorAll(".nav-link").forEach(button => button.classList.remove("active"));
@@ -273,7 +275,7 @@ window.onload = function () {
     getHistory();
     getMemory();
 }
-function deleteSession(){
+function deleteSession() {
     sessionStorage.clear();
     getHistory();
 }
@@ -307,7 +309,7 @@ function getHistory() {
     }
 
 }
-function getMemory(){
+function getMemory() {
     memory_div.innerHTML = '';
     let keys = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -327,23 +329,29 @@ function getMemory(){
         var hist_ele = localStorage.getItem(key);
 
         var newele = document.createElement("div");
-        newele.innerHTML = `<h3 class="my-3 text-end"> ${hist_ele} </h3>`;
+        newele.innerHTML = `<h3 class="mt-3 mb-0 text-end" id=${key}> ${hist_ele}</h3>
+        <div class="d-flex justify-content-end gap-1 border-bottom pb-2">
+        <button type="button" class="btn btn-light border"
+        style="--bs-btn-padding-y: .20rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .6rem;" onclick="localStorage.removeItem('${key}');getMemory();"> MC </button>
+
+        <button type="button" class="btn btn-light border"
+        style="--bs-btn-padding-y: .20rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .6rem;" onclick="localStorage.setItem('${key}',
+            Number(document.getElementById('${key}').innerText)+Number(document.getElementById('Input_area').value));getMemory();"> M+ </button>
+
+       <button type="button" class="btn btn-light border"
+        style="--bs-btn-padding-y: .20rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .6rem;" onclick="localStorage.setItem('${key}',
+            Number(document.getElementById('${key}').innerText)-Number(document.getElementById('Input_area').value));getMemory();"> M- </button>
+
+        </div>
+        
+        `;
         memory_div.appendChild(newele);
-        if(i==keys.length-1){
-            current_memory = hist_ele;
-        }
     }
-    // if(current_memory!=0){
-        var hist_ele = current_memory;
-        var newele = document.createElement("div");
-        newele.innerHTML = `<h3 class="my-3 text-end"> ${hist_ele} </h3>`;
-        memory_div.prepend(newele);
-    // }
 }
 function clickHistory(expression, answer) {
     // Set the input values with the clicked expression and answer
     input_area_g.value = answer;
-    sub_area_g.value = expression.slice(0,expression.length-1);
+    sub_area_g.value = expression.slice(0, expression.length - 1);
 }
 function factorial(n) {
     if (n === 0 || n === 1) return 1;
@@ -536,9 +544,9 @@ function buttonpress(e) {
         }
         // if
         // console.log(ans);
-        if(sub_area_g.value!=''){
+        if (sub_area_g.value != '') {
             var session_obj = {
-                expression: exp+'=',
+                expression: exp + '=',
                 answer: ans,
             };
             sessionStorage.setItem(Date.now(), JSON.stringify(session_obj));
