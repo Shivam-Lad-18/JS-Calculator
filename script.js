@@ -1,21 +1,31 @@
+// backspace error in exp button 
 var input_area_g = document.getElementById("Input_area");
 var sub_area_g = document.getElementById("sub_input");
 var keys = document.getElementById("keys");
 var trigo_drop = document.getElementById("trigo_drop");
 var func_drop = document.getElementById("func_drop");
 var trigo_btns = document.querySelectorAll(".t-func");
+var count_badge = document.getElementById("count_badge");
+var history_div = document.getElementById("history_div");
+var memory_div = document.getElementById("memory_div");
+var memory_btns = document.getElementById("memory_btns");
 
 var chanbool = false;
 var f_exp = false;
-var f_equal=false;
+var f_equal = false;
 var f_logxy = false;
+var f_yrootx = false;
 var f_t2nd = false;
 var f_hyp = false;
+var f_logxy = false;
 var scale = 'degree';
+var sp_count = 0;
+var current_memory = 0;
 
 keys.addEventListener('click', buttonpress);
 trigo_drop.addEventListener('click', trigoDrop);
 func_drop.addEventListener('click', funcDrop);
+memory_btns.addEventListener('click',memoryBtn);
 
 class TrigoFunctions {
     // Method to convert degrees to radians
@@ -138,7 +148,31 @@ class TrigoFunctions {
         return 1 / Math.tan(rad);
     }
 }
-
+function memoryBtn(e){
+    if(e.target.closest("#memory_mc")){
+        localStorage.clear();
+        current_memory=0;
+        getMemory();
+    }else if(e.target.closest("#memory_mr")){
+        input_area_g.value=current_memory;
+    }else if(e.target.closest("#memory_ma")){
+        console.log(typeof Number(input_area_g.value));
+        current_memory=Number(current_memory)+Number(input_area_g.value);
+        getMemory();
+    }else if(e.target.closest("#memory_mre")){
+        current_memory=Number(current_memory)-Number(input_area_g.value);
+        getMemory();
+    }else if(e.target.closest("#memory_ms")){
+        if(!isNaN(input_area_g.value)){
+            if(current_memory!=0){
+                localStorage.setItem(Date.now(),current_memory);
+            }
+            current_memory=input_area_g.value;
+        }
+        getMemory();
+    }
+    console.log(current_memory);
+}
 const operators = new Set(["+", "-", "/", "*", "%", "**"]);
 
 const trigoFunctionsSet = new Set([
@@ -147,8 +181,14 @@ const trigoFunctionsSet = new Set([
     'sinh', 'cosh', 'tanh', 'sech', 'csch', 'coth', // Hyperbolic functions
     'asinh', 'acosh', 'atanh', 'asech', 'acsch', 'acoth' // Inverse hyperbolic functions
 ]);
-
-function setActive(clickedButton) {
+function setActive(clickedButton,button) {
+    if(button=='history'){
+        history_div.style.display='block';
+        memory_div.style.display='none';
+    }else{
+        history_div.style.display='none';
+        memory_div.style.display='block';
+    }
     // Remove 'active' class from all buttons
     document.querySelectorAll(".nav-link").forEach(button => button.classList.remove("active"));
     clickedButton.classList.add("active");
@@ -161,8 +201,11 @@ function toggleActiveClass(checkbox) {
         navLink.classList.remove('active');
     }
 }
-function logB(number,base){
+function logB(number, base) {
     return Math.log(number) / Math.log(base);
+}
+function YrootX(y, x) {
+    return Math.pow(x, (1 / y));
 }
 function toggleText(button) {
     const currentText = button.innerText;
@@ -175,12 +218,11 @@ function toggleText(button) {
         scale = "rad";
     } else {
         button.innerText = "DEG"; // Change back to Degree
-        scale = "degree";  
+        scale = "degree";
     }
-    console.log(scale);
-    
-}
+    // console.log(scale);
 
+}
 function keepFocus() {
     const inputElement = document.getElementById("Input_area");
 
@@ -192,7 +234,6 @@ function keepFocus() {
         inputElement.focus();
     }, 100); // Refocus every 100ms
 }
-
 function ShowError() {
     // Get the alert element
     let alertElement = document.getElementById('danger-alert');
@@ -211,13 +252,11 @@ function ShowError() {
         alertElement.classList.add('d-none');
     });
 }
-
-
 window.onload = function () {
     document.getElementById("Input_area").focus();
     var square_inv = document.getElementById("square_inv");
     var square_root_inv = document.getElementById("square_root_inv");
-    var pow_inv = document.getElementById("**_inv");
+    var pow_inv = document.getElementById("yrootx_inv");
     var tenpow_inv = document.getElementById("tenpow_inv");
     var log_inv = document.getElementById("log_inv");
     var ln_inv = document.getElementById("ln_inv");
@@ -230,6 +269,81 @@ window.onload = function () {
     tenpow_inv.style.display = "none";
     log_inv.style.display = "none";
     ln_inv.style.display = "none";
+
+    getHistory();
+    getMemory();
+}
+function deleteSession(){
+    sessionStorage.clear();
+    getHistory();
+}
+function getHistory() {
+    history_div.innerHTML = '';
+    // Collect all the keys in an array
+    let keys = [];
+    for (let i = 0; i < sessionStorage.length; i++) {
+        let key = sessionStorage.key(i);
+        if (key === 'IsThisFirstTime_Log_From_LiveServer') {
+            continue; // Skip the specific key if needed
+        }
+        keys.push(key);
+    }
+
+    // Sort keys in descending order based on their timestamps (latest first)
+    keys.sort((a, b) => b - a);
+
+    // Now loop through the sorted keys
+    for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        var hist_ele = JSON.parse(sessionStorage.getItem(key));
+
+        var newele = document.createElement("div");
+        newele.innerHTML = `
+        <div class="d-grid text-end text-secondary my-2 border-bottom me-3" onclick="clickHistory('${hist_ele.expression}', '${hist_ele.answer}')">
+            <p style="font-size:0.9rem;">${hist_ele.expression}</p>
+            <h4 class="text-dark">${hist_ele.answer}</h4>
+        </div>`;
+        history_div.appendChild(newele);
+    }
+
+}
+function getMemory(){
+    memory_div.innerHTML = '';
+    let keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if (key === 'IsThisFirstTime_Log_From_LiveServer') {
+            continue; // Skip the specific key if needed
+        }
+        keys.push(key);
+    }
+
+    // Sort keys in descending order based on their timestamps (latest first)
+    keys.sort((a, b) => b - a);
+
+    // Now loop through the sorted keys
+    for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        var hist_ele = localStorage.getItem(key);
+
+        var newele = document.createElement("div");
+        newele.innerHTML = `<h3 class="my-3 text-end"> ${hist_ele} </h3>`;
+        memory_div.appendChild(newele);
+        if(i==keys.length-1){
+            current_memory = hist_ele;
+        }
+    }
+    // if(current_memory!=0){
+        var hist_ele = current_memory;
+        var newele = document.createElement("div");
+        newele.innerHTML = `<h3 class="my-3 text-end"> ${hist_ele} </h3>`;
+        memory_div.prepend(newele);
+    // }
+}
+function clickHistory(expression, answer) {
+    // Set the input values with the clicked expression and answer
+    input_area_g.value = answer;
+    sub_area_g.value = expression.slice(0,expression.length-1);
 }
 function factorial(n) {
     if (n === 0 || n === 1) return 1;
@@ -246,7 +360,7 @@ function changeBtn() {
 
     var square_inv = document.getElementById("square_inv");
     var square_root_inv = document.getElementById("square_root_inv");
-    var pow_inv = document.getElementById("**_inv");
+    var pow_inv = document.getElementById("yrootx_inv");
     var tenpow_inv = document.getElementById("tenpow_inv");
     var log_inv = document.getElementById("log_inv");
     var ln_inv = document.getElementById("ln_inv");
@@ -308,6 +422,16 @@ function buttonpress(e) {
     }
     else if (operators.has(val)) {
         // console.log("here");
+        if (f_logxy) {
+            sub_area_g.value += input_area_g.value + ')' + val;
+            f_logxy = false;
+            return;
+        }
+        if (f_yrootx) {
+            sub_area_g.value += input_area_g.value + ')' + val;
+            f_yrootx = false;
+            return;
+        }
         if (input_area_g.value === "" && sub_area_g.value === "") {
             sub_area_g.value = "0" + val;
             return;
@@ -333,7 +457,7 @@ function buttonpress(e) {
         } else {
             sub_area_g.value += input_area_g.value + val;
         }
-        f_equal=true;
+        f_equal = true;
         // input_area_g.value='';
     }
     else if (val === 'pi') {
@@ -347,6 +471,8 @@ function buttonpress(e) {
             input_area_g.value = '';
         } else {
             sub_area_g.value = '';
+            sp_count = 0;
+            count_badge.innerText = sp_count;
         }
     }
     else if (val === "fact") {
@@ -377,16 +503,50 @@ function buttonpress(e) {
             exp = sub_area_g.value + input_area_g.value;
         }
         // console.log(exp);
-
+        if (f_logxy) {
+            sub_area_g.value += input_area_g.value + ')' + val;
+            f_logxy = false;
+            exp += ')';
+        }
+        if (f_yrootx) {
+            sub_area_g.value += input_area_g.value + ')' + val;
+            f_yrootx = false;
+            exp += ')';
+        }
+        var ans;
         if (input_area_g.value === '') {
-            input_area_g.value = eval(exp.substr(0, exp.length - 1));
-            sub_area_g.value = '';
+            try {
+                ans = eval(exp.substr(0, exp.length - 1));
+            } catch {
+                ShowError();
+                sub_area_g.value = '';
+                input_area_g.value = '';
+                return;
+            }
         }
         else {
-            input_area_g.value = eval(exp);
-            sub_area_g.value = '';
+            try {
+                ans = eval(exp);
+            } catch {
+                ShowError();
+                sub_area_g.value = '';
+                input_area_g.value = '';
+                return;
+            }
         }
-        f_equal=true;
+        // if
+        // console.log(ans);
+        if(sub_area_g.value!=''){
+            var session_obj = {
+                expression: exp+'=',
+                answer: ans,
+            };
+            sessionStorage.setItem(Date.now(), JSON.stringify(session_obj));
+            getHistory();
+        }
+        input_area_g.value = ans;
+        sub_area_g.value = '';
+        f_equal = true;
     }
     else if (e.target.closest("#abs")) {
         // console.log("fj");
@@ -444,7 +604,14 @@ function buttonpress(e) {
         }
     }
     else if (e.target.closest("#log_inv")) {
-        
+        // console.log("log _inv");
+        sub_area_g.value += `logB(${input_area_g.value},`;
+        f_logxy = true;
+    }
+    else if (e.target.closest("#yrootx_inv")) {
+        // console.log("**");
+        sub_area_g.value += `YrootX(${input_area_g.value},`;
+        f_yrootx = true;
     }
     else if (e.target.closest("#ln")) {
         if (input_area_g.value != '') {
@@ -461,8 +628,35 @@ function buttonpress(e) {
         }
     }
     else if (e.target.closest("#exp")) {
-        input_area_g.value+='.e+0';
-        f_exp=true;
+        input_area_g.value += '.e+0';
+        f_exp = true;
+    }
+    else if (e.target.closest("#start_p")) {
+        // console.log("Sp");
+        sp_count++;
+        count_badge.innerHTML = sp_count;
+        if (sub_area_g.value === '' && input_area_g.value === '')
+            sub_area_g.value += input_area_g.value + "(";
+        else if (sub_area_g.value === '') {
+            sub_area_g.value += input_area_g.value + "*(";
+        }
+        else {
+            sub_area_g.value += "(";
+        }
+    }
+    else if (e.target.closest("#end_p")) {
+        // console.log("Ep");
+        if (sp_count == 0) return;
+        sp_count--;
+        count_badge.innerHTML = sp_count;
+        if (sub_area_g.value.at(sub_area_g.value.length - 1) === '(' && input_area_g.value === '')
+            sub_area_g.value += input_area_g.value + "0)*";
+        else if (sub_area_g.value.at(sub_area_g.value.length - 1) == '(') {
+            sub_area_g.value += input_area_g.value + ")*";
+        }
+        else {
+            sub_area_g.value += ")";
+        }
     }
     else if (val === ".") {
         if (input_area_g.value.at(input_area_g.value.length - 1) == '.') {
@@ -471,73 +665,77 @@ function buttonpress(e) {
         if (input_area_g.value === '') {
             input_area_g.value = 0.;
         }
-        input_area_g.value += val;
+        if (!input_area_g.value.includes('.')) {
+            f_equal = false;
+            input_area_g.value += val;
+        }
     }
     else if (!isNaN(val) && val !== "") { // Check if val is a valid number
         val = Number(val);
+
         // Prevent leading zero when pressing 0 first
         if (input_area_g.value === "0") {
             input_area_g.value = "";
         }
-        if(f_exp){
-            input_area_g.value=input_area_g.value.slice(0,input_area_g.value.length-1)+val;
-            f_exp=false;
+        if (f_exp) {
+            input_area_g.value = input_area_g.value.slice(0, input_area_g.value.length - 1) + val;
+            f_exp = false;
         }
-        else if(f_equal){
-            input_area_g.value=val;
-            f_equal=false;
+        else if (f_equal) {
+            input_area_g.value = val;
+            f_equal = false;
         }
-        else{
+        else {
             input_area_g.value += val; // Append number to input field
         }
     }
 }
 
-function trigoDrop(e){
+function trigoDrop(e) {
     var btn2nd = document.getElementById("trig2nd");
     var btnhyp = document.getElementById("hyp");
 
     let btn_id = e.target.id.trim();
     if (e.target.closest("#trig2nd")) {
-        if(!f_t2nd){
+        if (!f_t2nd) {
             btn2nd.classList.add('btn-primary');
             btn2nd.classList.remove('btn-light');
             f_t2nd = true;
-            trigo_btns.forEach(button =>{
-                button.innerHTML=button.innerHTML+`<sup>-1</sup>`;
-                button.id = 'a'+button.id;
+            trigo_btns.forEach(button => {
+                button.innerHTML = button.innerHTML + `<sup>-1</sup>`;
+                button.id = 'a' + button.id;
             })
         }
-        else{
+        else {
             btn2nd.classList.remove('btn-primary');
             btn2nd.classList.add('btn-light');
             f_t2nd = false;
-            trigo_btns.forEach(button =>{
+            trigo_btns.forEach(button => {
                 button.innerHTML = button.innerHTML.replace(/<sup>-1<\/sup>/g, "");
                 button.id = button.id.slice(1);
             })
         }
-    }else if(e.target.closest("#hyp")){
-        if(!f_hyp){
+    } else if (e.target.closest("#hyp")) {
+        if (!f_hyp) {
             btnhyp.classList.add('btn-primary');
             btnhyp.classList.remove('btn-light');
             f_hyp = true;
-            trigo_btns.forEach(button =>{
+            trigo_btns.forEach(button => {
                 button.innerHTML = button.innerHTML.slice(0, 3) + 'h' + button.innerHTML.slice(3);
-                button.id = button.id+'h';
+                button.id = button.id + 'h';
             });
         }
-        else{
+        else {
             btnhyp.classList.remove('btn-primary');
             btnhyp.classList.add('btn-light');
             f_hyp = false;
-            trigo_btns.forEach(button =>{
+            trigo_btns.forEach(button => {
                 button.innerHTML = button.innerHTML.slice(0, 3) + button.innerHTML.slice(4);
-                button.id = button.id.slice(0,button.id.length-1);
+                button.id = button.id.slice(0, button.id.length - 1);
 
             });
         }
-    }else if(trigoFunctionsSet.has(e.target.id)){
+    } else if (trigoFunctionsSet.has(e.target.id)) {
         // console.log(e.target.id);
         const functionName = e.target.id;
         const inputValue = Number(input_area_g.value);
@@ -557,26 +755,27 @@ function trigoDrop(e){
         }
     }
 }
-function funcDrop(e){
-    if(e.target.closest("#modulo")){
+function funcDrop(e) {
+    if (e.target.closest("#modulo")) {
         if (input_area_g.value < 0) {
             input_area_g.value *= -1;
         }
-    }else if(e.target.closest("#floor")){
-        if(!isNaN(Number(input_area_g.value))){
-            input_area_g.value=Math.floor(Number(input_area_g.value));
-        }else{
+    } else if (e.target.closest("#floor")) {
+        if (!isNaN(Number(input_area_g.value))) {
+            input_area_g.value = Math.floor(Number(input_area_g.value));
+        } else {
             ShowError();
         }
     }
-    else if(e.target.closest("#ceil")){
-        if(!isNaN(Number(input_area_g.value))){
-            input_area_g.value=Math.ceil(Number(input_area_g.value));
-        }else{
+    else if (e.target.closest("#ceil")) {
+        if (!isNaN(Number(input_area_g.value))) {
+            input_area_g.value = Math.ceil(Number(input_area_g.value));
+        } else {
             ShowError();
         }
     }
-    else if(e.target.closest("#rand")){
-        input_area_g.value=Math.random();
+    else if (e.target.closest("#rand")) {
+        input_area_g.value = Math.random();
     }
 }
+
