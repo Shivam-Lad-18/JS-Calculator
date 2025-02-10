@@ -157,6 +157,7 @@ function memoryBtn(e) {
         localStorage.clear();
         // current_memory=0;
         getMemory();
+        syncHistoryAndMemory();
     } else if (e.target.closest("#memory_mr")) {
         input_area_g.value = firstChild.innerText;
     } else if (e.target.closest("#memory_ma")) {
@@ -164,10 +165,12 @@ function memoryBtn(e) {
         firstChild.innerHTML = Number(firstChild.innerText) + Number(input_area_g.value);
         localStorage.setItem(firstChild.id, firstChild.innerHTML);
         getMemory();
+        syncHistoryAndMemory();
     } else if (e.target.closest("#memory_mre")) {
         firstChild.innerHTML = Number(firstChild.innerText) - Number(input_area_g.value);
         localStorage.setItem(firstChild.id, firstChild.innerHTML);
         getMemory();
+        syncHistoryAndMemory();
     } else if (e.target.closest("#memory_ms")) {
 
         if ((!isNaN(input_area_g.value)) && input_area_g.value != '') {
@@ -176,6 +179,7 @@ function memoryBtn(e) {
             localStorage.setItem(Date.now(), input_area_g.value);
         }
         getMemory();
+        syncHistoryAndMemory();
     }
     // console.log(current_memory);
 }
@@ -187,17 +191,53 @@ const trigoFunctionsSet = new Set([
     'sinh', 'cosh', 'tanh', 'sech', 'csch', 'coth', // Hyperbolic functions
     'asinh', 'acosh', 'atanh', 'asech', 'acsch', 'acoth' // Inverse hyperbolic functions
 ]);
+function syncHistoryAndMemory() {
+    // Sync History
+    const historyDiv = document.getElementById('history_div');
+    const historyDivOffcanvas = document.getElementById('history_offcanvas');
+    if (historyDiv && historyDivOffcanvas) {
+        historyDivOffcanvas.innerHTML = historyDiv.innerHTML;
+    }
+    // Sync Memory
+    const memoryDiv = document.getElementById('memory_div');
+    const memoryDivOffcanvas = document.getElementById('memory_offcanvas');
+    if (memoryDiv && memoryDivOffcanvas) {
+        memoryDivOffcanvas.innerHTML = memoryDiv.innerHTML;
+    }
+}
+
+// Sync content when the offcanvas is shown
+document.getElementById('historyOffcanvas').addEventListener('show.bs.offcanvas', syncHistoryAndMemory);
 function setActive(clickedButton, button) {
     if (button == 'history') {
         history_div.style.display = 'block';
         memory_div.style.display = 'none';
+        document.querySelectorAll(".hist").forEach(button => button.classList.add("active"));
+        document.querySelectorAll(".memo").forEach(button => button.classList.remove("active"));
     } else {
         history_div.style.display = 'none';
         memory_div.style.display = 'block';
+        document.querySelectorAll(".memo").forEach(button => button.classList.add("active"));
+        document.querySelectorAll(".hist").forEach(button => button.classList.remove("active"));
     }
     // Remove 'active' class from all buttons
-    document.querySelectorAll(".nav-link").forEach(button => button.classList.remove("active"));
-    clickedButton.classList.add("active");
+    // document.querySelectorAll(".nav-link").forEach(button => button.classList.remove("active"));
+    // clickedButton.classList.add("active");
+
+    if (button === 'history_offcanvas') {
+        document.getElementById('history_offcanvas').style.display = 'block';
+        document.getElementById('memory_offcanvas').style.display = 'none';
+        document.querySelectorAll(".hist").forEach(button => button.classList.add("active"));
+        document.querySelectorAll(".memo").forEach(button => button.classList.remove("active"));
+    } else if (button === 'memory_offcanvas') {
+        document.getElementById('history_offcanvas').style.display = 'none';
+        document.getElementById('memory_offcanvas').style.display = 'block';
+        document.querySelectorAll(".memo").forEach(button => button.classList.add("active"));
+        document.querySelectorAll(".hist").forEach(button => button.classList.remove("active"));
+    }
+    // Sync content
+    syncHistoryAndMemory();
+
 }
 function toggleActiveClass(checkbox) {
     const navLink = checkbox.closest('.nav-link');
@@ -280,6 +320,8 @@ window.onload = function () {
 
     getHistory();
     getMemory();
+    
+    syncHistoryAndMemory();
     setInterval(convertFe,10);
 }
 function convertFe(){
@@ -291,6 +333,7 @@ function convertFe(){
 function deleteSession() {
     sessionStorage.clear();
     getHistory();
+    syncHistoryAndMemory();
 }
 function getHistory() {
     history_div.innerHTML = '';
@@ -345,15 +388,15 @@ function getMemory() {
         newele.innerHTML = `<h3 class="mt-3 mb-0 text-end" id=${key}> ${hist_ele}</h3>
         <div class="d-flex justify-content-end gap-1 border-bottom pb-2">
         <button type="button" class="btn btn-light border"
-        style="--bs-btn-padding-y: .20rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .6rem;" onclick="localStorage.removeItem('${key}');getMemory();"> MC </button>
+        style="--bs-btn-padding-y: .20rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .6rem;" onclick="localStorage.removeItem('${key}');getMemory();syncHistoryAndMemory();"> MC </button>
 
         <button type="button" class="btn btn-light border"
         style="--bs-btn-padding-y: .20rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .6rem;" onclick="localStorage.setItem('${key}',
-            Number(document.getElementById('${key}').innerText)+Number(document.getElementById('Input_area').value));getMemory();"> M+ </button>
+            Number(document.getElementById('${key}').innerText)+Number(document.getElementById('Input_area').value));getMemory();syncHistoryAndMemory();"> M+ </button>
 
        <button type="button" class="btn btn-light border"
         style="--bs-btn-padding-y: .20rem; --bs-btn-padding-x: .25rem; --bs-btn-font-size: .6rem;" onclick="localStorage.setItem('${key}',
-            Number(document.getElementById('${key}').innerText)-Number(document.getElementById('Input_area').value));getMemory();"> M- </button>
+            Number(document.getElementById('${key}').innerText)-Number(document.getElementById('Input_area').value));getMemory();syncHistoryAndMemory();"> M- </button>
 
         </div>
         
@@ -564,6 +607,7 @@ function buttonpress(e) {
             };
             sessionStorage.setItem(Date.now(), JSON.stringify(session_obj));
             getHistory();
+            syncHistoryAndMemory();
         }
         input_area_g.value = ans;
         sub_area_g.value = '';

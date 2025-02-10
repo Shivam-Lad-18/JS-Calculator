@@ -18,6 +18,10 @@
     </div>
 
     <div class="conatiner-fluid w-100 vh-100">
+        <button class="btn btn-primary border-2 text-center d-md-none position-absolute top-0 end-0 m-2" type="button"
+            data-bs-toggle="offcanvas" data-bs-target="#historyOffcanvas" aria-controls="historyOffcanvas">
+            History
+        </button>
         <div class="row w-100 h-100">
             <div class="col-12 col-md-8">
                 <div class="calculator p-3 d-flex flex-column h-100">
@@ -404,28 +408,61 @@
 
                 </div>
             </div>
-            <div class="col col-md-4 d-md-block d-none vh-100 d-flex flex-column px-0">
+            <div class="col col-md-4 d-md-flex d-none vh-100 flex-column px-0">
                 <div class="history">
                     <ul class="nav nav-underline">
                         <li class=" nav-item ">
-                            <button class=" nav-link active text-dark py-1" onclick="setActive(this,'history')"
+                            <button class=" nav-link active text-dark py-1 hist" onclick="setActive(this,'history')"
                                 aria-current="page" href="#">History</button>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link text-dark py-1"  onclick="setActive(this,'memory')"
+                            <button class="nav-link text-dark py-1 memo" onclick="setActive(this,'memory')"
                                 href="#">Memory</button>
                         </li>
                     </ul>
                 </div>
-                <div id="history_div" class="overflow-auto flex-grow-1" style="height: 90%;">
+                <div id="history_div" class="overflow-auto flex-grow-1">
 
                 </div>
-                <div id="memory_div" class="overflow-auto flex-grow-1" style="height: 90%;display: none;">
-                  
+                <div id="memory_div" class="overflow-auto flex-grow-1" style="display: none;">
+
                 </div>
                 <div class="delete d-flex justify-content-end">
                     <button class="btn btn-light" onclick="deleteSession()"><img src="images/bin-svgrepo-com.svg"
                             alt="Delete" height="20rem"></button>
+                </div>
+            </div>
+
+
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="historyOffcanvas"
+                aria-labelledby="historyOffcanvasLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="historyOffcanvasLabel">History</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body d-flex flex-column">
+                    <div class="history">
+                        <ul class="nav nav-underline">
+                            <li class=" nav-item ">
+                                <button class=" nav-link active text-dark py-1 hist" onclick="setActive(this,'history_offcanvas')"
+                                    aria-current="page" href="#">History</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link text-dark py-1 memo" onclick="setActive(this,'memory_offcanvas')"
+                                    href="#">Memory</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="history_offcanvas" class="overflow-auto flex-grow-1">
+
+                    </div>
+                    <div id="memory_offcanvas" class="overflow-auto flex-grow-1" style="display: none;">
+
+                    </div>
+                    <div class="delete d-flex justify-content-end">
+                        <button class="btn btn-light" onclick="deleteSession()"><img src="images/bin-svgrepo-com.svg"
+                                alt="Delete" height="20rem"></button>
+                    </div>
                 </div>
             </div>
         </div>
