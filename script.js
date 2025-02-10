@@ -18,6 +18,8 @@ var f_yrootx = false;
 var f_t2nd = false;
 var f_hyp = false;
 var f_logxy = false;
+var f_fe = false;
+
 var scale = 'degree';
 var sp_count = 0;
 // var current_memory = 0;
@@ -167,9 +169,11 @@ function memoryBtn(e) {
         localStorage.setItem(firstChild.id, firstChild.innerHTML);
         getMemory();
     } else if (e.target.closest("#memory_ms")) {
-        if (!isNaN(input_area_g.value) && input_area_g.value != '') {
+
+        if ((!isNaN(input_area_g.value)) && input_area_g.value != '') {
             localStorage.setItem(Date.now(), input_area_g.value);
-            firstChild.innerText = input_area_g.value;
+        }else{
+            localStorage.setItem(Date.now(), input_area_g.value);
         }
         getMemory();
     }
@@ -199,15 +203,17 @@ function toggleActiveClass(checkbox) {
     const navLink = checkbox.closest('.nav-link');
     if (checkbox.checked) {
         navLink.classList.add('active');
+        f_fe=true;
     } else {
         navLink.classList.remove('active');
+        f_fe=false;
     }
 }
 function logB(number, base) {
-    return Math.log(number) / Math.log(base);
+    return Math.log(Number(number)) / Math.log(Number(base));
 }
 function YrootX(y, x) {
-    return Math.pow(x, (1 / y));
+    return Math.pow( Number(x), (1 / Number(y)));
 }
 function toggleText(button) {
     const currentText = button.innerText;
@@ -274,6 +280,13 @@ window.onload = function () {
 
     getHistory();
     getMemory();
+    setInterval(convertFe,10);
+}
+function convertFe(){
+    // console.log("hi");
+    if(!isNaN(input_area_g.value) && f_fe && input_area_g.value!=''){
+        input_area_g.value=Number(input_area_g.value).toExponential();
+    }
 }
 function deleteSession() {
     sessionStorage.clear();
@@ -613,13 +626,21 @@ function buttonpress(e) {
     }
     else if (e.target.closest("#log_inv")) {
         // console.log("log _inv");
+        if(input_area_g.value===''){
+            return;
+        }else
         sub_area_g.value += `logB(${input_area_g.value},`;
         f_logxy = true;
+        f_equal = true;
     }
     else if (e.target.closest("#yrootx_inv")) {
         // console.log("**");
+        if(input_area_g.value===''){
+            return;
+        }else
         sub_area_g.value += `YrootX(${input_area_g.value},`;
         f_yrootx = true;
+        f_equal = true;
     }
     else if (e.target.closest("#ln")) {
         if (input_area_g.value != '') {
