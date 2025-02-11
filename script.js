@@ -600,17 +600,27 @@ function buttonpress(e) {
         }
         // if
         // console.log(ans);
+        var session_obj;
         if (sub_area_g.value != '') {
-            var session_obj = {
+            session_obj = {
                 expression: exp + '=',
                 answer: ans,
             };
+            
+        }
+        console.log(typeof ans);
+        if(ans =='Infinity'){
+            input_area_g.value='';
+            sub_area_g.value='';
+            ShowError();
+        }
+        else{
             sessionStorage.setItem(Date.now(), JSON.stringify(session_obj));
             getHistory();
             syncHistoryAndMemory();
+            input_area_g.value = ans;
+            sub_area_g.value = '';
         }
-        input_area_g.value = ans;
-        sub_area_g.value = '';
         f_equal = true;
     }
     else if (e.target.closest("#abs")) {
