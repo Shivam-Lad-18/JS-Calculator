@@ -1,4 +1,4 @@
-// backspace error in exp button 
+
 var input_area_g = document.getElementById("Input_area");
 var sub_area_g = document.getElementById("sub_input");
 var keys = document.getElementById("keys");
@@ -22,7 +22,6 @@ var f_fe = false;
 
 var scale = 'degree';
 var sp_count = 0;
-// var current_memory = 0;
 
 keys.addEventListener('click', buttonpress);
 trigo_drop.addEventListener('click', trigoDrop);
@@ -175,7 +174,7 @@ function memoryBtn(e) {
 
         if ((!isNaN(input_area_g.value)) && input_area_g.value != '') {
             localStorage.setItem(Date.now(), input_area_g.value);
-        }else{
+        } else {
             localStorage.setItem(Date.now(), input_area_g.value);
         }
         getMemory();
@@ -220,9 +219,6 @@ function setActive(clickedButton, button) {
         document.querySelectorAll(".memo").forEach(button => button.classList.add("active"));
         document.querySelectorAll(".hist").forEach(button => button.classList.remove("active"));
     }
-    // Remove 'active' class from all buttons
-    // document.querySelectorAll(".nav-link").forEach(button => button.classList.remove("active"));
-    // clickedButton.classList.add("active");
 
     if (button === 'history_offcanvas') {
         document.getElementById('history_offcanvas').style.display = 'block';
@@ -243,17 +239,17 @@ function toggleActiveClass(checkbox) {
     const navLink = checkbox.closest('.nav-link');
     if (checkbox.checked) {
         navLink.classList.add('active');
-        f_fe=true;
+        f_fe = true;
     } else {
         navLink.classList.remove('active');
-        f_fe=false;
+        f_fe = false;
     }
 }
 function logB(number, base) {
     return Math.log(Number(number)) / Math.log(Number(base));
 }
 function YrootX(y, x) {
-    return Math.pow( Number(x), (1 / Number(y)));
+    return Math.pow(Number(x), (1 / Number(y)));
 }
 function toggleText(button) {
     const currentText = button.innerText;
@@ -302,32 +298,26 @@ function ShowError() {
 }
 window.onload = function () {
     document.getElementById("Input_area").focus();
-    var square_inv = document.getElementById("square_inv");
-    var square_root_inv = document.getElementById("square_root_inv");
-    var pow_inv = document.getElementById("yrootx_inv");
-    var tenpow_inv = document.getElementById("tenpow_inv");
-    var log_inv = document.getElementById("log_inv");
-    var ln_inv = document.getElementById("ln_inv");
+    var toggle_button = document.querySelectorAll('.toggle_button');
     var f_T2nd = false;
     var f_hyp = false;
 
-    square_inv.style.display = "none";
-    square_root_inv.style.display = "none";
-    pow_inv.style.display = "none";
-    tenpow_inv.style.display = "none";
-    log_inv.style.display = "none";
-    ln_inv.style.display = "none";
+
+    toggle_button.forEach((button) => {
+        // Adding an event listener to each button
+        button.style.display = "none";
+    });
 
     getHistory();
     getMemory();
-    
+
     syncHistoryAndMemory();
-    setInterval(convertFe,10);
+    setInterval(convertFe, 10);
 }
-function convertFe(){
+function convertFe() {
     // console.log("hi");
-    if(!isNaN(input_area_g.value) && f_fe && input_area_g.value!=''){
-        input_area_g.value=Number(input_area_g.value).toExponential();
+    if (!isNaN(input_area_g.value) && f_fe && input_area_g.value != '') {
+        input_area_g.value = Number(input_area_g.value).toExponential();
     }
 }
 function deleteSession() {
@@ -415,53 +405,38 @@ function factorial(n) {
 }
 
 function changeBtn() {
-    var square = document.getElementById("square");
-    var square_root = document.getElementById("square_root");
-    var pow = document.getElementById("**");
-    var tenpow = document.getElementById("tenpow");
-    var log = document.getElementById("log");
-    var ln = document.getElementById("ln");
+    var initial_button = document.querySelectorAll('.initial_button');
+    var toggle_button = document.querySelectorAll('.toggle_button');
 
-    var square_inv = document.getElementById("square_inv");
-    var square_root_inv = document.getElementById("square_root_inv");
-    var pow_inv = document.getElementById("yrootx_inv");
-    var tenpow_inv = document.getElementById("tenpow_inv");
-    var log_inv = document.getElementById("log_inv");
-    var ln_inv = document.getElementById("ln_inv");
+
 
     var chanbtn = document.getElementById("chan");
     if (!chanbool) {
-        square.style.display = "none";
-        square_root.style.display = "none";
-        pow.style.display = "none";
-        tenpow.style.display = "none";
-        log.style.display = "none";
-        ln.style.display = "none";
 
-        square_inv.style.display = "block";
-        square_root_inv.style.display = "block";
-        pow_inv.style.display = "block";
-        tenpow_inv.style.display = "block";
-        log_inv.style.display = "block";
-        ln_inv.style.display = "block";
+        // initial_button.forEach()
+        initial_button.forEach((button) => {
+            // Adding an event listener to each button
+            button.style.display = "none";
+        });
+        toggle_button.forEach((button) => {
+            // Adding an event listener to each button
+            button.style.display = "block";
+        });
 
         chanbool = true;
         chanbtn.classList.add('btn-primary');
         chanbtn.classList.remove('btn-light');
     } else {
-        square_inv.style.display = "none";
-        square_root_inv.style.display = "none";
-        pow_inv.style.display = "none";
-        tenpow_inv.style.display = "none";
-        log_inv.style.display = "none";
-        ln_inv.style.display = "none";
 
-        square.style.display = "block";
-        square_root.style.display = "block";
-        pow.style.display = "block";
-        tenpow.style.display = "block";
-        log.style.display = "block";
-        ln.style.display = "block";
+        initial_button.forEach((button) => {
+            // Adding an event listener to each button
+            button.style.display = "block";
+        });
+
+        toggle_button.forEach((button) => {
+            // Adding an event listener to each button
+            button.style.display = "none";
+        });
 
         chanbool = false;
         chanbtn.classList.add('btn-light');
@@ -606,15 +581,15 @@ function buttonpress(e) {
                 expression: exp + '=',
                 answer: ans,
             };
-            
+
         }
         console.log(typeof ans);
-        if(ans =='Infinity'){
-            input_area_g.value='';
-            sub_area_g.value='';
+        if (ans == 'Infinity') {
+            input_area_g.value = '';
+            sub_area_g.value = '';
             ShowError();
         }
-        else{
+        else {
             sessionStorage.setItem(Date.now(), JSON.stringify(session_obj));
             getHistory();
             syncHistoryAndMemory();
@@ -680,19 +655,19 @@ function buttonpress(e) {
     }
     else if (e.target.closest("#log_inv")) {
         // console.log("log _inv");
-        if(input_area_g.value===''){
+        if (input_area_g.value === '') {
             return;
-        }else
-        sub_area_g.value += `logB(${input_area_g.value},`;
+        } else
+            sub_area_g.value += `logB(${input_area_g.value},`;
         f_logxy = true;
         f_equal = true;
     }
     else if (e.target.closest("#yrootx_inv")) {
         // console.log("**");
-        if(input_area_g.value===''){
+        if (input_area_g.value === '') {
             return;
-        }else
-        sub_area_g.value += `YrootX(${input_area_g.value},`;
+        } else
+            sub_area_g.value += `YrootX(${input_area_g.value},`;
         f_yrootx = true;
         f_equal = true;
     }
