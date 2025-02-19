@@ -28,127 +28,110 @@ trigo_drop.addEventListener('click', trigoDrop);
 func_drop.addEventListener('click', funcDrop);
 memory_btns.addEventListener('click', memoryBtn);
 
-class TrigoFunctions {
-    // Method to convert degrees to radians
-    static toRadians(degrees) {
-        return degrees * (Math.PI / 180);
-    }
+function TrigoFunctions() {}
+// Using prototype to define methods
 
-    // Method to convert gradians to radians
-    static toRadiansFromGrad(grad) {
-        return grad * (Math.PI / 200);
-    }
+// Convert degrees to radians
+TrigoFunctions.prototype.toRadians = function (degrees) {
+    return degrees * (Math.PI / 180);
+};
 
-    // Method to convert radians to degrees
-    static toDegrees(radians) {
-        return radians * (180 / Math.PI);
-    }
+// Convert gradians to radians
+TrigoFunctions.prototype.toRadiansFromGrad = function (grad) {
+    return grad * (Math.PI / 200);
+};
 
-    // Method to convert radians to gradians
-    static toGrad(radians) {
-        return radians * (200 / Math.PI);
-    }
+// Convert radians to degrees
+TrigoFunctions.prototype.toDegrees = function (radians) {
+    return radians * (180 / Math.PI);
+};
 
-    // Method to normalize angle based on scale
-    static normalizeAngle(angle, scale) {
-        switch (scale) {
-            case 'degree':
-                return this.toRadians(angle);
-            case 'grad':
-                return this.toRadiansFromGrad(angle);
-            case 'rad':
-            default:
-                return angle;
-        }
-    }
+// Convert radians to gradians
+TrigoFunctions.prototype.toGrad = function (radians) {
+    return radians * (200 / Math.PI);
+};
 
-    // Sine function
-    static sin(angle, scale = 'rad') {
+// Normalize angle based on scale
+TrigoFunctions.prototype.normalizeAngle = function (angle, scale) {
+    switch (scale) {
+        case 'degree':
+            return this.toRadians(angle);
+        case 'grad':
+            return this.toRadiansFromGrad(angle);
+        case 'rad':
+        default:
+            return angle;
+    }
+};
+
+// Creating a closure for trigonometric functions
+TrigoFunctions.prototype.createTrigFunction = function (mathFunc) {
+    return function (angle, scale = 'rad') {
         const rad = this.normalizeAngle(angle, scale);
-        return Math.sin(rad);
-    }
+        return mathFunc(rad);
+    };
+};
 
-    // Arc Sine function
-    static asin(value, scale = 'rad') {
-        const result = Math.asin(value);
-        return scale === 'degree' ? this.toDegrees(result) : scale === 'grad' ? this.toGrad(result) : result;
-    }
+// Creating a closure for inverse trigonometric functions
+TrigoFunctions.prototype.createInverseTrigFunction = function (mathFunc) {
+    return function (value, scale = 'rad') {
+        const result = mathFunc(value);
+        return scale === 'degree' ? this.toDegrees(result) :
+               scale === 'grad' ? this.toGrad(result) : result;
+    };
+};
 
-    // Hyperbolic Sine function
-    static sinh(angle, scale = 'rad') {
-        const rad = this.normalizeAngle(angle, scale);
-        return Math.sinh(rad);
-    }
+// Define trigonometric functions using closures
+TrigoFunctions.prototype.sin = TrigoFunctions.prototype.createTrigFunction(Math.sin);
+TrigoFunctions.prototype.cos = TrigoFunctions.prototype.createTrigFunction(Math.cos);
+TrigoFunctions.prototype.tan = TrigoFunctions.prototype.createTrigFunction(Math.tan);
 
-    // Inverse Hyperbolic Sine function
-    static asinh(value) {
-        return Math.asinh(value);
-    }
+// Define inverse trigonometric functions using closures
+TrigoFunctions.prototype.asin = TrigoFunctions.prototype.createInverseTrigFunction(Math.asin);
+TrigoFunctions.prototype.acos = TrigoFunctions.prototype.createInverseTrigFunction(Math.acos);
+TrigoFunctions.prototype.atan = TrigoFunctions.prototype.createInverseTrigFunction(Math.atan);
 
-    // Cosine function
-    static cos(angle, scale = 'rad') {
-        const rad = this.normalizeAngle(angle, scale);
-        return Math.cos(rad);
-    }
+// Define inverse hyperbolic trigonometric functions directly
+TrigoFunctions.prototype.asinh = function (value) {
+    return Math.asinh(value);
+};
 
-    // Arc Cosine function
-    static acos(value, scale = 'rad') {
-        const result = Math.acos(value);
-        return scale === 'degree' ? this.toDegrees(result) : scale === 'grad' ? this.toGrad(result) : result;
-    }
+TrigoFunctions.prototype.acosh = function (value) {
+    return Math.acosh(value);
+};
 
-    // Hyperbolic Cosine function
-    static cosh(angle, scale = 'rad') {
-        const rad = this.normalizeAngle(angle, scale);
-        return Math.cosh(rad);
-    }
+TrigoFunctions.prototype.atanh = function (value) {
+    return Math.atanh(value);
+};
 
-    // Inverse Hyperbolic Cosine function
-    static acosh(value) {
-        return Math.acosh(value);
-    }
+TrigoFunctions.prototype.sinh = function (value) {
+    return Math.sinh(value);
+};
 
-    // Tangent function
-    static tan(angle, scale = 'rad') {
-        const rad = this.normalizeAngle(angle, scale);
-        return Math.tan(rad);
-    }
+TrigoFunctions.prototype.cosh = function (value) {
+    return Math.cosh(value);
+};
 
-    // Arc Tangent function
-    static atan(value, scale = 'rad') {
-        const result = Math.atan(value);
-        return scale === 'degree' ? this.toDegrees(result) : scale === 'grad' ? this.toGrad(result) : result;
-    }
+TrigoFunctions.prototype.tanh = function (value) {
+    return Math.tanh(value);
+};
 
-    // Hyperbolic Tangent function
-    static tanh(angle, scale = 'rad') {
-        const rad = this.normalizeAngle(angle, scale);
-        return Math.tanh(rad);
-    }
+// Define reciprocal trigonometric functions
+TrigoFunctions.prototype.sec = function (angle, scale = 'rad') {
+    const rad = this.normalizeAngle(angle, scale);
+    return 1 / Math.cos(rad);
+};
 
-    // Inverse Hyperbolic Tangent function
-    static atanh(value) {
-        return Math.atanh(value);
-    }
+TrigoFunctions.prototype.csc = function (angle, scale = 'rad') {
+    const rad = this.normalizeAngle(angle, scale);
+    return 1 / Math.sin(rad);
+};
 
-    // Secant function
-    static sec(angle, scale = 'rad') {
-        const rad = this.normalizeAngle(angle, scale);
-        return 1 / Math.cos(rad);
-    }
+TrigoFunctions.prototype.cot = function (angle, scale = 'rad') {
+    const rad = this.normalizeAngle(angle, scale);
+    return 1 / Math.tan(rad);
+};
 
-    // Cosecant function
-    static csc(angle, scale = 'rad') {
-        const rad = this.normalizeAngle(angle, scale);
-        return 1 / Math.sin(rad);
-    }
-
-    // Cotangent function
-    static cot(angle, scale = 'rad') {
-        const rad = this.normalizeAngle(angle, scale);
-        return 1 / Math.tan(rad);
-    }
-}
 function memoryBtn(e) {
     let firstChild = document.querySelector("#memory_div div:first-child h3");
 
@@ -297,7 +280,7 @@ function ShowError() {
     });
 }
 window.onload = function () {
-    document.getElementById("Input_area").focus();
+    // document.getElementById("Input_area").focus();
     var toggle_button = document.querySelectorAll('.toggle_button');
     var f_T2nd = false;
     var f_hyp = false;
@@ -799,7 +782,8 @@ function trigoDrop(e) {
         const inputValue = Number(input_area_g.value);
         if (!isNaN(inputValue)) { // Check if the input is a valid number
             // Call the corresponding function from TrigoFunctions
-            const ans = TrigoFunctions[functionName](inputValue, scale);
+            const trigo = new TrigoFunctions();
+            const ans = trigo[functionName](inputValue, scale);
             // Handle special cases like Infinity
             if (!isFinite(ans)) {
                 ShowError();
