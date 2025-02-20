@@ -28,7 +28,7 @@ trigo_drop.addEventListener('click', trigoDrop);
 func_drop.addEventListener('click', funcDrop);
 memory_btns.addEventListener('click', memoryBtn);
 
-function TrigoFunctions() {}
+function TrigoFunctions() { }
 // Using prototype to define methods
 
 // Convert degrees to radians
@@ -77,7 +77,7 @@ TrigoFunctions.prototype.createInverseTrigFunction = function (mathFunc) {
     return function (value, scale = 'rad') {
         const result = mathFunc(value);
         return scale === 'degree' ? this.toDegrees(result) :
-               scale === 'grad' ? this.toGrad(result) : result;
+            scale === 'grad' ? this.toGrad(result) : result;
     };
 };
 
@@ -250,17 +250,17 @@ function toggleText(button) {
     // console.log(scale);
 
 }
-function keepFocus() {
-    const inputElement = document.getElementById("Input_area");
+// function keepFocus() {
+//     const inputElement = document.getElementById("Input_area");
 
-    // Keep the input focused even when clicking elsewhere
-    inputElement.focus();
+//     // Keep the input focused even when clicking elsewhere
+//     inputElement.focus();
 
-    // Ensure input is focused whenever the page is loaded or focus is lost
-    setInterval(() => {
-        inputElement.focus();
-    }, 100); // Refocus every 100ms
-}
+//     // Ensure input is focused whenever the page is loaded or focus is lost
+//     setInterval(() => {
+//         inputElement.focus();
+//     }, 100); // Refocus every 100ms
+// }
 function ShowError() {
     // Get the alert element
     let alertElement = document.getElementById('danger-alert');
@@ -281,10 +281,24 @@ function ShowError() {
 }
 window.onload = function () {
     // document.getElementById("Input_area").focus();
+    // keepFocus();
     var toggle_button = document.querySelectorAll('.toggle_button');
     var f_T2nd = false;
     var f_hyp = false;
+    
+    document.addEventListener("keydown", function(event) {
+        // console.log(`Key pressed: ${event.key}`);
+        
+        if (event.key === "Enter") {
+            document.getElementById("=").click();
+        }else if (event.key >= "0" && event.key <= "9") {
+            document.getElementById(event.key).click();
 
+        }else if (event.key === "Backspace") { 
+            document.getElementById("b_space").click();
+
+        }
+    });
 
     toggle_button.forEach((button) => {
         // Adding an event listener to each button
@@ -473,10 +487,14 @@ function buttonpress(e) {
             else if (opp == '-') {
                 sub_area_g.value = sub_area_g.value.slice(0, sub_area_g.value.length - 1) +
                     '+' + Math.abs(input_area_g.value) + val;
-            } else {
+            } 
+            else {
                 sub_area_g.value += input_area_g.value + val;
             }
-        } else {
+        } else if(sub_area_g.value.at(sub_area_g.value.length - 1)==')'){
+            // console.log("gujg");
+            sub_area_g.value=sub_area_g.value+"*"+input_area_g.value+val;
+        }else {
             sub_area_g.value += input_area_g.value + val;
         }
         f_equal = true;
@@ -696,7 +714,11 @@ function buttonpress(e) {
             sub_area_g.value += input_area_g.value + ")*";
         }
         else {
-            sub_area_g.value += ")";
+            if(input_area_g.value === '')
+            sub_area_g.value += ")";    
+            else
+            sub_area_g.value =sub_area_g.value+input_area_g.value+ ")";
+
         }
     }
     else if (val === ".") {
